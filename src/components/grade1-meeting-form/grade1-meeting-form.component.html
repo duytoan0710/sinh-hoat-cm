@@ -1,0 +1,225 @@
+<div class="animate-fade-in">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-900">Biên bản Sinh hoạt tổ chuyên môn - Khối 1</h2>
+    <div class="flex items-center gap-4">
+      <button type="button" (click)="viewClicked.emit()" class="rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        Xem biên bản
+      </button>
+      <button type="button" (click)="downloadClicked.emit()" class="rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Tải file PDF
+      </button>
+    </div>
+  </div>
+  <form [formGroup]="meetingForm" (ngSubmit)="onSubmit()" class="space-y-4">
+
+    <!-- Section: Time and Place -->
+    <div class="rounded-lg bg-white shadow-sm overflow-hidden border">
+      <button type="button" (click)="toggleSection('timeAndPlace')" class="w-full flex justify-between items-center p-3 text-left bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 hover:from-indigo-100 transition-colors focus:outline-none">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-800">I/ THỜI GIAN ĐỊA ĐIỂM</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-indigo-600" [class.rotate-180]="!sections().timeAndPlace" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      @if (sections().timeAndPlace) {
+        <div class="p-6 border-t animate-fade-in-down">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div>
+              <label for="meetingDate" class="block text-sm font-medium leading-6 text-gray-900">Ngày họp</label>
+              <div class="relative mt-1">
+                <input type="date" id="meetingDate" formControlName="meetingDate" class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0h18" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label for="meetingTime" class="block text-sm font-medium leading-6 text-gray-900">Giờ họp</label>
+               <div class="relative mt-1">
+                <input type="time" id="meetingTime" formControlName="meetingTime" class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                   <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+            <div>
+              <label for="location" class="block text-sm font-medium leading-6 text-gray-900">Địa điểm</label>
+               <div class="relative mt-1">
+                <input type="text" id="location" formControlName="location" class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Văn phòng trường">
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                   <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                   </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Section: Attendees -->
+    <div class="rounded-lg bg-white shadow-sm overflow-hidden border">
+       <button type="button" (click)="toggleSection('attendees')" class="w-full flex justify-between items-center p-3 text-left bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 hover:from-indigo-100 transition-colors focus:outline-none">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-800">II/ THÀNH PHẦN THAM DỰ</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-indigo-600" [class.rotate-180]="!sections().attendees" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      @if (sections().attendees) {
+        <div class="p-6 border-t animate-fade-in-down grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div>
+            <label for="chairperson" class="block text-sm font-medium leading-6 text-gray-900">Chủ toạ (Khối trưởng)</label>
+            <select id="chairperson" formControlName="chairperson" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"><option value="" disabled>Chọn</option>@for(t of teachers(); track t){<option [value]="t">{{t}}</option>}</select>
+          </div>
+          <div>
+            <label for="secretary" class="block text-sm font-medium leading-6 text-gray-900">Thư ký</label>
+            <select id="secretary" formControlName="secretary" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"><option value="" disabled>Chọn</option>@for(t of teachers(); track t){<option [value]="t">{{t}}</option>}</select>
+          </div>
+          <div>
+             <label for="director" class="block text-sm font-medium leading-6 text-gray-900">BGH Dự chỉ đạo</label>
+            <select id="director" formControlName="director" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"><option value="">Không có</option>@for(t of teachers(); track t){<option [value]="t">{{t}}</option>}</select>
+          </div>
+          <div class="sm:col-span-2">
+            <app-multi-select-search formControlName="members" [options]="teachers()" label="Thành viên tham dự khác"></app-multi-select-search>
+          </div>
+          <div>
+            <label for="absentWithPermission" class="block text-sm font-medium leading-6 text-gray-900">GV Vắng có phép</label>
+            <input type="number" id="absentWithPermission" formControlName="absentWithPermission" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          </div>
+           <div>
+            <label for="absentWithoutPermission" class="block text-sm font-medium leading-6 text-gray-900">GV Vắng không phép</label>
+            <input type="number" id="absentWithoutPermission" formControlName="absentWithoutPermission" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Section: Content -->
+     <div class="rounded-lg bg-white shadow-sm overflow-hidden border">
+       <button type="button" (click)="toggleSection('content')" class="w-full flex justify-between items-center p-3 text-left bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 hover:from-indigo-100 transition-colors focus:outline-none">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-800">A/ NỘI DUNG</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-indigo-600" [class.rotate-180]="!sections().content" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      @if (sections().content) {
+        <div class="p-6 border-t animate-fade-in-down space-y-6">
+          <fieldset>
+            <legend class="text-md font-semibold text-gray-900">I. ĐÁNH GIÁ CÔNG TÁC THÁNG TRƯỚC</legend>
+            <div class="mt-4 space-y-4">
+              <div>
+                <label for="evaluationGood" class="block text-sm font-medium leading-6 text-gray-900">1. Đánh giá tổng quát các công tác đã thực hiện đạt yêu cầu:</label>
+                <textarea id="evaluationGood" formControlName="evaluationGood" rows="3" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+              <div>
+                <label for="evaluationBad" class="block text-sm font-medium leading-6 text-gray-900">2. Nêu cụ thể những công tác thực hiện chưa đạt yêu cầu và giải pháp:</label>
+                <textarea id="evaluationBad" formControlName="evaluationBad" rows="3" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend class="text-md font-semibold text-gray-900">II. TRIỂN KHAI CÔNG TÁC THÁNG NÀY</legend>
+             <div class="mt-4 space-y-4">
+              <div>
+                <label for="planAction" class="block text-sm font-medium leading-6 text-gray-900">1. Công tác giáo dục đạo đức học sinh, sinh hoạt chủ điểm:</label>
+                <textarea id="planAction" formControlName="planAction" rows="3" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+              <div>
+                <label for="planProfessional" class="block text-sm font-medium leading-6 text-gray-900">2. Chuyên môn (Nhắc nhở, triển khai, sinh hoạt chuyên đề):</label>
+                <textarea id="planProfessional" formControlName="planProfessional" rows="3" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      }
+    </div>
+    
+    <!-- Section: Discussion -->
+    <div class="rounded-lg bg-white shadow-sm overflow-hidden border">
+       <button type="button" (click)="toggleSection('discussion')" class="w-full flex justify-between items-center p-3 text-left bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 hover:from-indigo-100 transition-colors focus:outline-none">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-800">B/ THẢO LUẬN</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-indigo-600" [class.rotate-180]="!sections().discussion" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      @if (sections().discussion) {
+        <div class="p-6 border-t animate-fade-in-down space-y-6">
+          <fieldset>
+            <legend class="text-md font-semibold text-gray-900">1. Diễn biến</legend>
+            <div class="mt-4 space-y-4">
+              <div>
+                <label for="discussionContent" class="block text-sm font-medium leading-6 text-gray-900">Góp ý kiến rút kinh nghiệm công tác tháng trước:</label>
+                <textarea id="discussionContent" formControlName="discussionContent" rows="3" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+              <div>
+                <label for="discussionAgreement" class="block text-sm font-medium leading-6 text-gray-900">Nhất trí hoặc không nhất trí nội dung công tác và phân công phụ trách:</label>
+                <textarea id="discussionAgreement" formControlName="discussionAgreement" rows="3" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+               <div>
+                <label for="discussionChanges" class="block text-sm font-medium leading-6 text-gray-900">Điều chỉnh hoặc bổ sung thêm nội dung công tác:</label>
+                <textarea id="discussionChanges" formControlName="discussionChanges" rows="3" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend class="text-md font-semibold text-gray-900">2. Kết luận thống nhất của tổ trưởng chuyên môn</legend>
+             <div class="mt-4 space-y-4">
+              <div>
+                <label for="conclusionAgreed" class="block text-sm font-medium leading-6 text-gray-900">a) Nhất trí các nội dung công tác:</label>
+                <textarea id="conclusionAgreed" formControlName="conclusionAgreed" rows="3" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+              <div>
+                <label for="conclusionDisagreed" class="block text-sm font-medium leading-6 text-gray-900">b) Chưa thống nhất các nội dung công tác:</label>
+                <textarea id="conclusionDisagreed" formControlName="conclusionDisagreed" rows="3" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      }
+    </div>
+
+    <!-- Section: Suggestions -->
+    <div class="rounded-lg bg-white shadow-sm overflow-hidden border">
+       <button type="button" (click)="toggleSection('suggestions')" class="w-full flex justify-between items-center p-3 text-left bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 hover:from-indigo-100 transition-colors focus:outline-none">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-800">C/ NHỮNG KIẾN NGHỊ VỚI BAN GIÁM HIỆU</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-indigo-600" [class.rotate-180]="!sections().suggestions" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      @if (sections().suggestions) {
+        <div class="p-6 border-t animate-fade-in-down">
+          <textarea formControlName="boardSuggestions" rows="4" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Nhập các kiến nghị (nếu có)..."></textarea>
+        </div>
+      }
+    </div>
+    
+    <!-- Section: Signatures -->
+    <div class="rounded-lg bg-white shadow-sm overflow-hidden border">
+       <button type="button" (click)="toggleSection('signatures')" class="w-full flex justify-between items-center p-3 text-left bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 hover:from-indigo-100 transition-colors focus:outline-none">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-indigo-800">Ký tên</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-indigo-600" [class.rotate-180]="!sections().signatures" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      @if (sections().signatures) {
+        <div class="p-6 border-t animate-fade-in-down grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+            <div>
+              <h4 class="font-bold">CHỦ TOẠ HỘI NGHỊ</h4>
+              <p class="text-xs italic mb-2">Khối Trưởng</p>
+              <app-signature-input formControlName="headSignature"></app-signature-input>
+            </div>
+             <div>
+              <h4 class="font-bold">BGH DỰ CHỈ ĐẠO</h4>
+              <p class="text-xs italic mb-2">(Ký tên, ghi chức vụ)</p>
+              <app-signature-input formControlName="directorSignature"></app-signature-input>
+            </div>
+            <div>
+              <h4 class="font-bold">THƯ KÝ VIẾT BIÊN BẢN</h4>
+              <p class="text-xs italic mb-2">(Ký và ghi rõ họ tên)</p>
+              <app-signature-input formControlName="secretarySignature"></app-signature-input>
+            </div>
+        </div>
+      }
+    </div>
+
+    <div class="flex items-center justify-end pt-4">
+      <button type="submit" class="rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">Lưu thay đổi</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,161 @@
+<div class="animate-fade-in">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-900">Phiếu đánh giá giờ dạy (Thông tư 27)</h2>
+    <div class="flex items-center gap-4">
+      <button type="button" (click)="viewClicked.emit()" class="rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+        Xem biên bản
+      </button>
+      <button type="button" (click)="downloadClicked.emit()" class="rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        Tải file PDF
+      </button>
+    </div>
+  </div>
+  <form [formGroup]="evaluationForm" (ngSubmit)="onSubmit()" class="space-y-4">
+
+    <!-- Section: Header Info -->
+    <div class="rounded-lg bg-white shadow-sm overflow-hidden border">
+      <button type="button" (click)="toggleSection('header')" class="w-full flex justify-between items-center p-3 text-left bg-gradient-to-r from-rose-50 via-pink-50 to-purple-50 hover:from-rose-100 transition-colors focus:outline-none">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-rose-800">Thông tin chung</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-rose-600" [class.rotate-180]="!sections().header" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      @if (sections().header) {
+        <div class="p-6 border-t animate-fade-in-down grid grid-cols-1 sm:grid-cols-4 gap-x-6 gap-y-4">
+          <div class="sm:col-span-2"><label for="studentName" class="block text-sm font-medium leading-6 text-gray-900">Họ và tên sinh viên</label><div class="mt-1"><input type="text" id="studentName" formControlName="studentName" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></div></div>
+          <div class="sm:col-span-2"><label for="subject" class="block text-sm font-medium leading-6 text-gray-900">Dạy môn</label><div class="mt-1"><input type="text" id="subject" formControlName="subject" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></div></div>
+          
+          <div class="sm:col-span-1">
+            <label for="date" class="block text-sm font-medium leading-6 text-gray-900">Ngày lên lớp</label>
+            <div class="relative mt-1">
+              <input type="date" id="date" formControlName="date" class="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0h18" /></svg>
+              </div>
+            </div>
+          </div>
+          <div class="sm:col-span-1"><label for="session" class="block text-sm font-medium leading-6 text-gray-900">Buổi</label><div class="mt-1"><input type="text" id="session" formControlName="session" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></div></div>
+          <div class="sm:col-span-1"><label for="period" class="block text-sm font-medium leading-6 text-gray-900">Tiết</label><div class="mt-1"><input type="text" id="period" formControlName="period" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></div></div>
+          <div class="sm:col-span-1"><label for="class" class="block text-sm font-medium leading-6 text-gray-900">Lớp</label><div class="mt-1"><input type="text" id="class" formControlName="class" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></div></div>
+          <div class="sm:col-span-4"><label for="lesson" class="block text-sm font-medium leading-6 text-gray-900">Tên chủ đề/bài học</label><div class="mt-1"><input type="text" id="lesson" formControlName="lesson" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></div></div>
+          <div class="sm:col-span-4"><label for="attendingTeacher" class="block text-sm font-medium leading-6 text-gray-900">Họ và tên giáo viên cùng dự</label><div class="mt-1"><select id="attendingTeacher" formControlName="attendingTeacher" class="block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"><option value="" disabled>Chọn</option>@for(t of teachers();track t){<option [value]="t">{{t}}</option>}</select></div></div>
+        </div>
+      }
+    </div>
+
+    <!-- Section: Rating -->
+    <div class="rounded-lg bg-white shadow-sm overflow-hidden border">
+       <button type="button" (click)="toggleSection('rating')" class="w-full flex justify-between items-center p-3 text-left bg-gradient-to-r from-rose-50 via-pink-50 to-purple-50 hover:from-rose-100 transition-colors focus:outline-none">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-rose-800">Đánh giá & Chấm điểm</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-rose-600" [class.rotate-180]="!sections().rating" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+       @if (sections().rating) {
+        <div class="p-6 border-t animate-fade-in-down">
+          <div class="overflow-x-auto -m-6">
+            <table class="min-w-full text-sm">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-4 py-3 text-left font-medium text-gray-600 uppercase tracking-wider w-[50%]">Tiêu chí</th>
+                  <th class="px-4 py-3 text-center font-medium text-gray-600 uppercase tracking-wider w-[25%]">Điểm tối đa</th>
+                  <th class="px-4 py-3 text-center font-medium text-gray-600 uppercase tracking-wider w-[25%]">Điểm đánh giá</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr class="bg-gray-100"><td colspan="3" class="px-4 py-2 font-bold text-gray-700">1. Xác định mục tiêu (3 điểm)</td></tr>
+                @for(item of ratingCriteria.slice(0, 2); track item.field) {
+                  <tr>
+                    <td class="px-4 py-3 align-top text-gray-600 pl-8">{{ item.text }}</td>
+                    <td class="px-4 py-3 align-top text-center">{{ item.max }}</td>
+                    <td class="px-4 py-3 align-top"><input type="number" [formControlName]="item.field" class="block w-24 mx-auto rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300" [max]="item.max" min="0" step="0.5"></td>
+                  </tr>
+                }
+                <tr class="bg-gray-100"><td colspan="3" class="px-4 py-2 font-bold text-gray-700">2. Hoạt động của sinh viên (5 điểm)</td></tr>
+                 @for(item of ratingCriteria.slice(2, 8); track item.field) {
+                  <tr>
+                    <td class="px-4 py-3 align-top text-gray-600 pl-8">{{ item.text }}</td>
+                    <td class="px-4 py-3 align-top text-center">{{ item.max }}</td>
+                    <td class="px-4 py-3 align-top"><input type="number" [formControlName]="item.field" class="block w-24 mx-auto rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300" [max]="item.max" min="0" step="0.5"></td>
+                  </tr>
+                }
+                <tr class="bg-gray-100"><td colspan="3" class="px-4 py-2 font-bold text-gray-700">3. Hoạt động của học sinh (8 điểm)</td></tr>
+                 @for(item of ratingCriteria.slice(8, 13); track item.field) {
+                  <tr>
+                    <td class="px-4 py-3 align-top text-gray-600 pl-8">{{ item.text }}</td>
+                    <td class="px-4 py-3 align-top text-center">{{ item.max }}</td>
+                    <td class="px-4 py-3 align-top"><input type="number" [formControlName]="item.field" class="block w-24 mx-auto rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300" [max]="item.max" min="0" step="0.5"></td>
+                  </tr>
+                }
+                <tr class="bg-gray-100"><td colspan="3" class="px-4 py-2 font-bold text-gray-700">4. Hiệu quả (4 điểm)</td></tr>
+                 @for(item of ratingCriteria.slice(13); track item.field) {
+                  <tr>
+                    <td class="px-4 py-3 align-top text-gray-600 pl-8">{{ item.text }}</td>
+                    <td class="px-4 py-3 align-top text-center">{{ item.max }}</td>
+                    <td class="px-4 py-3 align-top"><input type="number" [formControlName]="item.field" class="block w-24 mx-auto rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300" [max]="item.max" min="0" step="0.5"></td>
+                  </tr>
+                }
+                <tr class="bg-gray-200">
+                    <td colspan="2" class="px-4 py-3 text-right font-bold text-gray-800">Cộng:</td>
+                    <td class="px-4 py-3 font-bold text-xl text-indigo-700 text-center">{{ totalScore() }} / 20</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800 space-y-1">
+            <p class="font-bold">Ghi chú:</p>
+            <p>Điểm chấm từng mục được làm tròn đến 1 chữ thập phân.</p>
+            <p><strong>Loại Tốt:</strong> 18 → 20 (Các tiêu chí 1.1, 2.2, 3.5, 4.1 không bị điểm 0).</p>
+            <p><strong>Loại Khá:</strong> 14 →17,5 (Các tiêu chí 1.1, 2.2, 3.5, 4.1 không bị điểm 0).</p>
+            <p><strong>Loại Trung bình:</strong> 10→13,5 (Các tiêu chí 1.1, 2.2, 3.5, 4.1 không bị điểm 0).</p>
+            <p><strong>Loại Chưa đạt:</strong> dưới 10 (Hoặc một trong các tiêu chí 1.1, 2.2, 3.5, 4.1 bị điểm 0).</p>
+          </div>
+        </div>
+      }
+    </div>
+    
+    <!-- Section: Notes -->
+    <div class="rounded-lg bg-white shadow-sm overflow-hidden border">
+       <button type="button" (click)="toggleSection('notes')" class="w-full flex justify-between items-center p-3 text-left bg-gradient-to-r from-rose-50 via-pink-50 to-purple-50 hover:from-rose-100 transition-colors focus:outline-none">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-rose-800">Ghi chú & Nhận xét</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-rose-600" [class.rotate-180]="!sections().notes" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      @if (sections().notes) {
+         <div class="p-6 border-t animate-fade-in-down space-y-4">
+            <div>
+              <label for="mainActivities" class="block text-sm font-medium leading-6 text-gray-900">Ghi chép hoạt động giáo dục chủ yếu</label>
+              <textarea id="mainActivities" formControlName="mainActivities" rows="5" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"></textarea>
+            </div>
+            <div>
+              <label for="notes" class="block text-sm font-medium leading-6 text-gray-900">Ghi chú</label>
+              <textarea id="notes" formControlName="notes" rows="3" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"></textarea>
+            </div>
+            <div>
+              <label for="generalComments" class="block text-sm font-medium leading-6 text-gray-900">Nhận xét chung</label>
+              <textarea id="generalComments" formControlName="generalComments" rows="4" class="mt-1 block w-full rounded-md border-0 py-1.5 px-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300"></textarea>
+            </div>
+         </div>
+      }
+    </div>
+
+    <!-- Section: Signatures -->
+    <div class="rounded-lg bg-white shadow-sm overflow-hidden border">
+       <button type="button" (click)="toggleSection('signatures')" class="w-full flex justify-between items-center p-3 text-left bg-gradient-to-r from-rose-50 via-pink-50 to-purple-50 hover:from-rose-100 transition-colors focus:outline-none">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-rose-800">Ký tên</h3>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 transform transition-transform duration-300 text-rose-600" [class.rotate-180]="!sections().signatures" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+      </button>
+      @if (sections().signatures) {
+        <div class="p-6 border-t animate-fade-in-down flex justify-center text-center">
+            <div>
+              <h4 class="font-bold">Người đánh giá</h4>
+              <p class="text-xs italic mb-2">(Ký và ghi rõ họ tên)</p>
+              <app-signature-input formControlName="evaluatorSignature"></app-signature-input>
+            </div>
+        </div>
+      }
+    </div>
+
+    <div class="flex items-center justify-end pt-4">
+      <button type="submit" class="rounded-md bg-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">Lưu thay đổi</button>
+    </div>
+  </form>
+</div>

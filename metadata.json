@@ -1,0 +1,5 @@
+{
+  "name": "Sổ SHCM",
+  "description": "Một ứng dụng để quản lý quy trình sinh hoạt chuyên môn theo nghiên cứu bài học, bao gồm ba buổi họp với biên bản và chữ ký số.",
+  "requestFramePermissions": []
+}

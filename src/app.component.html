@@ -1,0 +1,338 @@
+<!-- Hidden component for PDF rendering -->
+@if(pdfRenderData(); as pdfData) {
+  <div class="absolute -left-[9999px] top-0">
+    <div id="pdf-source-container" class="bg-white">
+       <app-printable-minutes [session]="pdfData"></app-printable-minutes>
+    </div>
+  </div>
+}
+
+<!-- Viewer Modal -->
+@if(isViewerOpen() && viewerData(); as viewerInfo) {
+  <app-meeting-minutes-viewer 
+    [session]="viewerInfo"
+    (close)="closeViewer()">
+  </app-meeting-minutes-viewer>
+}
+
+<!-- Workflow Guide Modal -->
+@if(isWorkflowGuideOpen()) {
+  <app-workflow-guide (close)="closeWorkflowGuide()"></app-workflow-guide>
+}
+
+
+<div class="min-h-screen bg-gray-100 p-4 sm:p-6 lg:p-8">
+  <div class="max-w-7xl mx-auto">
+    @if (activeSession(); as session) {
+      <!-- Session Process View -->
+      <main>
+        @switch (session.activityType) {
+          @case ('lesson-study') {
+            <div class="bg-white rounded-2xl shadow-xl">
+              <!-- Session Header -->
+              <div class="flex justify-between items-center pt-6 pb-4 px-6 sm:pt-8 sm:pb-4 sm:px-8">
+                  <h2 class="text-xl font-semibold text-gray-800 tracking-wide">{{ session.title }}</h2>
+                  <button (click)="goToDashboard()" class="text-sm text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"> 
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+                    </svg>
+                    Về trang chính
+                  </button>
+              </div>
+              
+              <!-- Tab Navigation -->
+              <div class="border-b border-gray-200 px-6 sm:px-8">
+                <nav class="-mb-px flex space-x-6 sm:space-x-8" aria-label="Tabs">
+                  @for(tab of tabs; track tab.number) {
+                    <button 
+                      (click)="navigateToTab(tab.number)"
+                      [class.border-indigo-500]="session.currentStep === tab.number"
+                      [class.text-indigo-600]="session.currentStep === tab.number"
+                      [class.border-transparent]="session.currentStep !== tab.number"
+                      [class.text-gray-500]="session.currentStep !== tab.number"
+                      [class.hover:text-gray-700]="session.currentStep !== tab.number"
+                      [class.hover:border-gray-300]="session.currentStep !== tab.number"
+                      class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors focus:outline-none">
+                      {{ tab.title }}
+                    </button>
+                  }
+                </nav>
+              </div>
+
+              <!-- Tab Content -->
+              <div class="p-6 sm:p-8">
+                @switch (session.currentStep) {
+                  @case (1) {
+                    <app-general-info-form [initialData]="session.data.generalInfo ?? { title: session.title }" (formSubmitted)="saveGeneralInfo($event)" />
+                  }
+                  @case (2) {
+                    <app-meeting-form-1 
+                      [initialData]="session.data.step1" 
+                      (formSubmitted)="saveStep1($event)" 
+                      (viewClicked)="openViewer(session, 2)" 
+                      (downloadClicked)="downloadPdf(session, 2)" />
+                  }
+                  @case (3) {
+                    <app-meeting-form-2 
+                      [initialData]="session.data.step2" 
+                      (formSubmitted)="saveStep2($event)" 
+                      (viewClicked)="openViewer(session, 3)" 
+                      (downloadClicked)="downloadPdf(session, 3)" />
+                  }
+                  @case (4) {
+                    <app-meeting-form-3 
+                      [initialData]="session.data.step3" 
+                      (formSubmitted)="saveStep3($event)" 
+                      (viewClicked)="openViewer(session, 4)" 
+                      (downloadClicked)="downloadPdf(session, 4)" />
+                  }
+                }
+                
+                @if(session.currentStep === 4) {
+                  <div class="flex items-center justify-end pt-8 mt-8 border-t">
+                    <button type="button" (click)="finishProcess()" class="rounded-md bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">
+                      Hoàn tất & Đóng quy trình
+                    </button>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+          @case ('regular-meeting') {
+            <app-regular-meeting 
+              [session]="session"
+              (back)="goToDashboard()"
+              (formSubmitted)="saveRegularMeeting($event)"
+              (viewClicked)="openViewer(session)"
+              (downloadClicked)="downloadPdf(session)">
+            </app-regular-meeting>
+          }
+           @case ('class-observation') {
+            <app-class-observation
+              [session]="session"
+              (back)="goToDashboard()"
+              (formSubmitted)="saveClassObservationData($event)"
+              (viewClicked)="openViewer(session)"
+              (downloadClicked)="downloadPdf(session)">
+            </app-class-observation>
+          }
+        }
+      </main>
+    } @else {
+      <!-- Dashboard View -->
+      <main>
+        <div class="bg-white rounded-2xl shadow-lg p-4 sm:p-6 mb-8">
+            <div class="flex flex-wrap justify-between items-center gap-4">
+              <h1 class="text-2xl font-bold text-gray-900">Tổng quan các hoạt động</h1>
+              <div class="flex items-center gap-6">
+                <button (click)="openWorkflowGuide()" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-indigo-600 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                  </svg>
+                  Xem quy trình
+                </button>
+                 <div class="flex items-center gap-3">
+                    <label for="department-filter" class="text-base font-medium text-gray-800">Tổ chuyên môn:</label>
+                    <div class="relative inline-block shadow-lg rounded-lg">
+                        <select id="department-filter" (change)="changeDepartment($event)" [value]="selectedDepartment()" class="appearance-none rounded-lg border-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white pl-4 pr-10 py-2 text-base font-bold focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100 cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-px">
+                            <option class="text-black bg-white" value="all">Tất cả</option>
+                            @for (dept of availableDepartments(); track dept) {
+                              <option class="text-black bg-white" [value]="dept">{{ dept }}</option>
+                            }
+                        </select>
+                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
+                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                  <label for="school-year" class="text-base font-medium text-gray-800">Năm học:</label>
+                  <div class="relative inline-block shadow-lg rounded-lg">
+                    <select id="school-year" (change)="changeSchoolYear($event)" [value]="selectedSchoolYear()" class="appearance-none rounded-lg border-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white pl-4 pr-10 py-2 text-base font-bold focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-100 cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:-translate-y-px">
+                      @for (year of availableSchoolYears(); track year) {
+                        <option class="text-black bg-white" [value]="year">{{ year }}</option>
+                      }
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-white">
+                      <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.25 4.25a.75.75 0 01-1.06 0L5.23 8.27a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+          @for (month of months; track month) {
+            <section class="bg-white rounded-xl shadow-lg">
+              <header>
+                 <button (click)="toggleMonth(month)" class="w-full flex justify-between items-center p-4 text-left hover:bg-gray-50 focus:outline-none rounded-t-xl transition-colors">
+                    <h3 class="text-xl font-bold text-indigo-700">Tháng {{ month }}</h3>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 transform transition-transform duration-200 text-gray-500" [class.rotate-180]="!expandedMonths()[month]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+              </header>
+              @if (expandedMonths()[month]) {
+                <div class="p-4 sm:p-6 grid grid-cols-1 gap-6 border-t animate-fade-in-down">
+                  
+                  <!-- Column 1: Lesson Study -->
+                  @let lessonStudyActivities = sessionsByMonth()[month]?.['lesson-study'] ?? [];
+                  <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-4 rounded-xl flex flex-col shadow-lg text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="flex justify-between items-center mb-3">
+                      <h4 class="font-semibold text-white">Sinh hoạt chuyên môn theo Nghiên cứu bài học</h4>
+                      <button (click)="startNewActivity(month, 'lesson-study')" title="Thêm hoạt động" class="flex-shrink-0 flex items-center justify-center gap-1.5 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors py-1.5 px-3 font-semibold text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                        <span>Thêm hoạt động</span>
+                      </button>
+                    </div>
+                    <div class="flex-grow">
+                      @if (lessonStudyActivities.length > 0) {
+                        <ul class="space-y-3">
+                          @for (session of lessonStudyActivities; track session.id) {
+                            <li class="bg-white p-3 rounded-lg shadow-sm transition-all border border-gray-200 hover:shadow-md hover:border-indigo-300">
+                              <div class="flex justify-between items-center">
+                                <div class="flex-grow min-w-0">
+                                  <p class="font-semibold text-gray-800 truncate">{{ session.title }}</p>
+                                  <div class="flex items-center gap-x-4 gap-y-1 flex-wrap text-xs text-gray-500 mt-1">
+                                    <span 
+                                      [class.bg-green-100]="session.status === 'Completed'" 
+                                      [class.text-green-700]="session.status === 'Completed'" 
+                                      [class.bg-blue-100]="session.status === 'In Progress'" 
+                                      [class.text-blue-700]="session.status === 'In Progress'" 
+                                      class="inline-flex items-center px-2 py-0.5 rounded-full font-medium">
+                                      {{ session.status === 'Completed' ? 'Hoàn tất' : 'Đang thực hiện' }}
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                      </svg>
+                                      Ngày tạo: {{ session.creationDate | date:'dd/MM/yyyy' }}
+                                    </span>
+                                  </div>
+                                </div>
+                                <button (click)="selectSession(session.id)" class="flex-shrink-0 ml-4 px-4 py-2 text-sm font-semibold text-indigo-600 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                  Xem chi tiết
+                                </button>
+                              </div>
+                            </li>
+                          }
+                        </ul>
+                      } @else {
+                        <div class="text-center text-sm text-white/70 h-full flex items-center justify-center p-4 border-2 border-dashed border-white/50 rounded-lg">Chưa có hoạt động</div>
+                      }
+                    </div>
+                  </div>
+
+                  <!-- Column 2: Regular Meeting -->
+                   @let regularMeetingActivities = sessionsByMonth()[month]?.['regular-meeting'] ?? [];
+                  <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-4 rounded-xl flex flex-col shadow-lg text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                    <div class="flex justify-between items-center mb-3">
+                      <h4 class="font-semibold text-white">Sinh hoạt tổ chuyên môn định kỳ</h4>
+                      <button (click)="startNewActivity(month, 'regular-meeting')" class="flex-shrink-0 flex items-center justify-center gap-1.5 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors py-1.5 px-3 font-semibold text-sm" title="Thêm hoạt động">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                        <span>Thêm hoạt động</span>
+                      </button>
+                    </div>
+                     <div class="flex-grow">
+                      @if (regularMeetingActivities.length > 0) {
+                        <ul class="space-y-3">
+                          @for (session of regularMeetingActivities; track session.id) {
+                            <li class="bg-white p-3 rounded-lg shadow-sm border border-gray-200">
+                              <div class="flex justify-between items-center">
+                                <div class="flex-grow min-w-0">
+                                  <p class="font-semibold text-gray-800 truncate">{{ session.title }}</p>
+                                  <div class="flex items-center gap-x-4 gap-y-1 flex-wrap text-xs text-gray-500 mt-1">
+                                    <span 
+                                      [class.bg-green-100]="session.status === 'Completed'" 
+                                      [class.text-green-700]="session.status === 'Completed'" 
+                                      class="inline-flex items-center px-2 py-0.5 rounded-full font-medium">
+                                      {{ session.status === 'Completed' ? 'Hoàn tất' : 'Đã thực hiện' }}
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                      </svg>
+                                      Ngày tạo: {{ session.creationDate | date:'dd/MM/yyyy' }}
+                                    </span>
+                                  </div>
+                                </div>
+                                <button (click)="selectSession(session.id)" class="flex-shrink-0 ml-4 px-4 py-2 text-sm font-semibold text-indigo-600 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                  Xem chi tiết
+                                </button>
+                              </div>
+                            </li>
+                          }
+                        </ul>
+                      } @else {
+                        <div class="text-center text-sm text-white/70 h-full flex items-center justify-center p-4 border-2 border-dashed border-white/50 rounded-lg">Chưa có hoạt động</div>
+                      }
+                    </div>
+                  </div>
+
+                  <!-- Column 3: Class Observation -->
+                   @let classObservationActivities = sessionsByMonth()[month]?.['class-observation'] ?? [];
+                  <div class="bg-gradient-to-br from-indigo-500 to-purple-600 p-4 rounded-xl flex flex-col shadow-lg text-white transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                     <div class="flex justify-between items-center mb-3">
+                       <h4 class="font-semibold text-white">Dự giờ</h4>
+                       <button (click)="startNewActivity(month, 'class-observation')" class="flex-shrink-0 flex items-center justify-center gap-1.5 rounded-lg bg-white/20 text-white hover:bg-white/30 transition-colors py-1.5 px-3 font-semibold text-sm" title="Thêm hoạt động">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                         <span>Thêm hoạt động</span>
+                       </button>
+                     </div>
+                     <div class="flex-grow">
+                      @if (classObservationActivities.length > 0) {
+                        <ul class="space-y-3">
+                          @for (session of classObservationActivities; track session.id) {
+                            <li class="bg-white p-3 rounded-lg shadow-sm border border-gray-200 opacity-75">
+                               <div class="flex justify-between items-center">
+                                <div class="flex-grow min-w-0">
+                                  <p class="font-semibold text-gray-800 truncate">{{ session.title }}</p>
+                                  <div class="flex items-center gap-x-4 gap-y-1 flex-wrap text-xs text-gray-500 mt-1">
+                                    <span 
+                                      [class.bg-green-100]="session.status === 'Completed'" 
+                                      [class.text-green-700]="session.status === 'Completed'" 
+                                      class="inline-flex items-center px-2 py-0.5 rounded-full font-medium">
+                                      {{ session.status === 'Completed' ? 'Hoàn tất' : 'Đã dự' }}
+                                    </span>
+                                    <span class="flex items-center gap-1">
+                                      <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                      </svg>
+                                      Ngày tạo: {{ session.creationDate | date:'dd/MM/yyyy' }}
+                                    </span>
+                                  </div>
+                                </div>
+                                <button (click)="selectSession(session.id)" class="flex-shrink-0 ml-4 px-4 py-2 text-sm font-semibold text-indigo-600 bg-indigo-100 rounded-lg hover:bg-indigo-200 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                  Xem chi tiết
+                                </button>
+                              </div>
+                            </li>
+                          }
+                        </ul>
+                      } @else {
+                        <div class="text-center text-sm text-white/70 h-full flex items-center justify-center p-4 border-2 border-dashed border-white/50 rounded-lg">Chưa có hoạt động</div>
+                      }
+                    </div>
+                  </div>
+
+                </div>
+              }
+            </section>
+          }
+        </div>
+      </main>
+    }
+
+    <!-- Save Confirmation Toast -->
+    @if (showSaveConfirmation()) {
+      <div class="fixed bottom-6 right-6 bg-gray-900 text-white py-3 px-5 rounded-lg shadow-2xl animate-fade-in-up">
+        <p class="font-medium">Đã lưu thay đổi!</p>
+      </div>
+    }
+  </div>
+</div>

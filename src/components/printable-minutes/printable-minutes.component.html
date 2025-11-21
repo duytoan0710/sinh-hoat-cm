@@ -1,0 +1,324 @@
+@if (session(); as currentSession) {
+  @let generalInfo = currentSession.data.generalInfo;
+
+  <div class="bg-white p-8 font-serif text-gray-900 text-sm leading-relaxed" style="font-family: 'Times New Roman', serif;">
+  
+    <!-- Header -->
+    <header class="grid grid-cols-2 mb-8">
+      <div class="text-center font-bold">
+        <p class="uppercase">{{ generalInfo?.school ?? 'PHÒNG GD & ĐT HUYỆN ...' }}</p>
+        <p class="uppercase">{{ generalInfo?.school ? 'TRƯỜNG TIỂU HỌC ' + generalInfo.school.toUpperCase() : 'TRƯỜNG TIỂU HỌC ....................' }}</p>
+      </div>
+      <div class="text-center font-bold">
+        <p>CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
+        <p>Độc lập - Tự do - Hạnh phúc</p>
+      </div>
+    </header>
+    
+    <!-- Main Content & Signatures -->
+    @switch (currentSession.activityType) {
+      @case ('lesson-study') {
+        @switch (currentSession.currentStep) {
+          @case (2) {
+            @if(currentSession.data.step1; as minutes) {
+              <div class="text-right italic mb-8">
+                <p>..., {{ formatDate(minutes.meetingDate) }}</p>
+              </div>
+              <h1 class="text-center font-bold uppercase text-base mb-4">BIÊN BẢN HỌP SINH HOẠT TỔ CHUYÊN MÔN<br>THEO HƯỚNG NGHIÊN CỨU BÀI HỌC (Lần 1)</h1>
+              <section class="space-y-3">
+                <p>Hôm nay vào lúc {{ formatTime(minutes.meetingTime) }}, {{ formatDate(minutes.meetingDate) }} Tại {{ minutes.location ?? '...' }} diễn ra buổi sinh hoạt chuyên môn theo nghiên cứu bài học.</p>
+                <p><strong>Thành phần tham dự:</strong> {{ (minutes.attendees ?? []).join(', ') }}.</p>
+                <p><strong>Vắng:</strong> {{ (minutes.absent ?? []).join(', ') || 'Không' }}.</p>
+                <p><strong>Người chủ trì:</strong> {{ minutes.chairperson ?? '...' }}. <strong>Chức vụ:</strong> {{ minutes.position ?? '...' }}.</p>
+                <h2 class="font-bold uppercase text-center mt-4">NỘI DUNG</h2>
+                <p><strong>1- Đ/c/ {{ minutes.chairperson ?? '...' }}</strong> Tổ trưởng chuyên môn triển khai nội dung buổi sinh hoạt:</p>
+                <p class="pl-4">Căn cứ Kế hoạch đã đề ra về việc sinh hoạt chuyên môn theo nghiên cứu bài học, do đó tổ khối yêu cầu giáo viên trong khối cùng chọn một bài dạy để tiến hành soạn thống nhất phương pháp dạy học theo hướng phát triển phẩm chất năng lực học sinh.</p>
+                <p class="pl-4">Các thành viên trong tổ lắng nghe nội dung và tiến hành thảo luận để lựa chọn bài dạy minh hoạ.</p>
+                <p class="pl-4">+ Đ/c {{ minutes.proposedLesson ? '....................' : '' }} đề xuất chọn bài: <strong>{{ minutes.proposedLesson }}</strong></p>
+                <p class="pl-4">+ Đ/c đã giải thích lý do chọn nội dung: {{ minutes.reasonForChoice }}</p>
+                <p class="pl-4">Các thành viên trong tổ đã nhất trí với đề xuất trên của đồng chí: <strong>{{ minutes.assignedTeacher ?? '...' }}</strong>.</p>
+                <p class="pl-4">Sau khi lắng nghe các thành viên trong tổ đề xuất chọn bài dạy minh hoạ, giải thích lí do chọn bài, tổ trưởng chuyên môn đồng ý và kết luận:</p>
+                <p class="pl-6">+ Giao cho đồng chí: <strong>{{ minutes.assignedTeacher ?? '...' }}</strong> tiến hành soạn bài.</p>
+                <p class="pl-6">+ Dự kiến thời gian dạy minh hoạ: {{ minutes.proposedTeachingDate ? formatDate(minutes.proposedTeachingDate) : '...' }}.</p>
+                <p class="pl-6">+ Trước thời gian dạy, tổ sẽ tổ chức sinh hoạt chuyên đề và thảo luận nội dung, phương pháp dạy.</p>
+                <p class="pl-4">Buổi sinh hoạt chuyên môn theo nghiên cứu bài học kết thúc vào lúc ....... giờ cùng ngày có các thành viên trong tổ cùng tham gia và nhất trí.</p>
+              </section>
+              <footer class="grid grid-cols-2 mt-16 text-center">
+                <div><p class="font-bold">THƯ KÝ</p><p class="italic text-xs mb-2">(Ký và ghi rõ họ tên)</p>@if(minutes.secretarySignature){<img [src]="minutes.secretarySignature" alt="Chữ ký Thư ký" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+                <div><p class="font-bold">TỔ TRƯỞNG CHUYÊN MÔN</p><p class="italic text-xs mb-2">(Ký và ghi rõ họ tên)</p>@if(minutes.headSignature){<img [src]="minutes.headSignature" alt="Chữ ký Tổ trưởng" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+              </footer>
+            }
+          }
+          @case (3) {
+            @if(currentSession.data.step2; as minutes) {
+              <div class="text-right italic mb-8"><p>..., {{ formatDate(currentDate.toISOString()) }}</p></div>
+              <h1 class="text-center font-bold uppercase text-base mb-4">BIÊN BẢN SINH HOẠT TỔ CHUYÊN MÔN THEO CHUYÊN ĐỀ<br>NGHIÊN CỨU BÀI HỌC (Lần 2)</h1>
+              <section class="space-y-3">
+                <p>... giờ ..., {{ formatDate(currentDate.toISOString()) }}</p>
+                <p>- Số giáo viên tham dự: .../... </p>
+                <p>- Tên người vắng: ... </p>
+                <p>- Nội dung cuộc họp: Thảo luận về bước chuẩn bị giờ dạy minh họa</p>
+                <p>- Người thực hiện giờ dạy: {{ minutes.teacher }}</p>
+                <p>- Tên Bài: {{ minutes.lessonTitle }}</p>
+                <p>- Để chuẩn bị cho giờ dạy giáo viên cần nắm rõ được mục tiêu bài học:</p>
+                <p class="pl-4"><strong>1. Kiến thức:</strong> {{ minutes.objectiveKnowledge }}</p>
+                <p class="pl-4"><strong>2. Kỹ năng:</strong> {{ minutes.objectiveSkills }}</p>
+                <p class="pl-4"><strong>3. Thái độ:</strong> {{ minutes.objectiveAttitude }}</p>
+                <p class="pl-4"><strong>4. Hình thành phát triển năng lực:</strong> {{ minutes.objectiveCompetency }}</p>
+                <p class="font-bold mt-2">Thảo luận về bước tiến hành giờ dạy MH</p>
+                <p class="pl-4">{{ minutes.discussionNotes }}</p>
+                <p>Biên bản cuộc họp Thảo luận về bước tiến hành giờ dạy MH. Kết thúc ... giờ ... cùng ngày.</p>
+              </section>
+              <footer class="grid grid-cols-2 mt-16 text-center">
+                <div><p class="font-bold">THƯ KÝ</p><p class="italic text-xs mb-2">(Ký và ghi rõ họ tên)</p>@if(minutes.secretarySignature){<img [src]="minutes.secretarySignature" alt="Chữ ký Thư ký" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+                <div><p class="font-bold">TỔ TRƯỞỞNG CHUYÊN MÔN</p><p class="italic text-xs mb-2">(Ký và ghi rõ họ tên)</p>@if(minutes.headSignature){<img [src]="minutes.headSignature" alt="Chữ ký Tổ trưởng" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+              </footer>
+            }
+          }
+          @case (4) {
+            @if(currentSession.data.step3; as minutes) {
+              <div class="text-right italic mb-8"><p>..., {{ formatDate(currentDate.toISOString()) }}</p></div>
+              <h1 class="text-center font-bold uppercase text-base mb-4">BIÊN BẢN SINH HOẠT TỔ CHUYÊN MÔN PHƯƠNG PHÁP<br>DẠY HỌC NGHIÊN CỨU BÀI HỌC (Lần 3)</h1>
+              <section class="space-y-3">
+                <p>... giờ ..., {{ formatDate(currentDate.toISOString()) }}</p>
+                <p>- Số giáo viên tham dự: .../... </p>
+                <p>- Nội dung của buổi suy ngẫm và thảo luận</p>
+                <p class="pl-4"><strong>1. Đồng chí tổ trưởng nhận xét:</strong></p>
+                <p class="pl-6">{{ minutes.headComments }}</p>
+                <p class="pl-4"><strong>2. Giáo viên tham gia thảo luận:</strong></p>
+                <p class="pl-6">{{ minutes.teacherDiscussion }}</p>
+                <p class="pl-4"><strong>3. Tổng kết thực hiện chuyên đề theo hướng nghiên cứu bài học</strong></p>
+                <p class="pl-6">- Ưu điểm: {{ minutes.summaryAdvantages }}</p>
+                <p class="pl-6">- Tồn tại: {{ minutes.summaryDisadvantages }}</p>
+                <p class="pl-4"><strong>4. Thảo luận về bước áp dụng cho thực tế dạy học hằng ngày</strong></p>
+                <p class="pl-6">{{ minutes.applicationDiscussion }}</p>
+                <p>Biên bản cuộc họp Thảo luận về bước suy ngẫm và thảo luận về giờ dạy MH. Kết thúc ... giờ ... cùng ngày.</p>
+              </section>
+              <footer class="grid grid-cols-2 mt-16 text-center">
+                <div><p class="font-bold">THƯ KÝ</p><p class="italic text-xs mb-2">(Ký và ghi rõ họ tên)</p>@if(minutes.secretarySignature){<img [src]="minutes.secretarySignature" alt="Chữ ký Thư ký" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+                <div><p class="font-bold">TỔ TRƯỞNG CHUYÊN MÔN</p><p class="italic text-xs mb-2">(Ký và ghi rõ họ tên)</p>@if(minutes.headSignature){<img [src]="minutes.headSignature" alt="Chữ ký Tổ trưởng" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+              </footer>
+            }
+          }
+        }
+      }
+      @case ('regular-meeting') {
+        @if(currentSession.data.meetingData; as minutes) {
+          @switch (currentSession.grade) {
+            @case ('Khối 1') {
+              <h1 class="text-center font-bold uppercase text-base mb-4">BIÊN BẢN SINH HOẠT TỔ CHUYÊN MÔN<br>LỚP MỘT - Tháng {{ currentSession.month }} / {{ currentSession.schoolYear.split('-')[0] }}</h1>
+              <section class="space-y-3">
+                <p><strong>I/ THỜI GIAN ĐỊA ĐIỂM:</strong></p>
+                <p class="pl-4">Hôm nay vào lúc {{ formatTime(minutes.meetingTime) }}, {{ formatDate(minutes.meetingDate) }}, tại {{ minutes.location ?? '...' }}, tiến hành họp lệ sinh hoạt chuyên môn khối 1 - Tháng {{ currentSession.month }} Năm {{ currentSession.schoolYear.split('-')[0] }}.</p>
+                <p><strong>II/ THÀNH PHẦN THAM DỰ:</strong></p>
+                <p class="pl-4">Đ/c {{ minutes.chairperson }} Chức vụ Khối trưởng Chủ toạ cuộc họp</p>
+                <p class="pl-4">Đ/c {{ minutes.secretary }} Chức vụ ..................................... Thư ký cuộc họp</p>
+                <p class="pl-4">Đ/c {{ minutes.director }} Chức vụ ..................................... Dự chỉ đạo tổ .</p>
+                <p class="pl-4">Cùng {{ minutes.members?.length }} Thành viên là Giáo viên trong khối về tham dự họp lệ sinh hoạt .</p>
+                <p class="pl-6">+ Trong đó GV Vắng có phép: {{ minutes.absentWithPermission ?? 0 }}</p>
+                <p class="pl-6">+ Trong đó GV vắng không phép : {{ minutes.absentWithoutPermission ?? 0 }}</p>
+                <p class="font-bold">A/ NỘI DUNG :</p>
+                <p class="pl-4"><strong>I. ĐÁNH GIÁ CÔNG TÁC THÁNG 20...</strong></p>
+                <p class="pl-6">1. Đánh giá tổng quát các công tác đã thực hiện đạt yêu cầu :<br>{{ minutes.evaluationGood }}</p>
+                <p class="pl-6">2. Nêu cụ thể những công tác thực hiện chưa đạt yêu cầu và các giải pháp khắc phục, rút kinh nghiệm cho lần sau:<br>{{ minutes.evaluationBad }}</p>
+                <p class="pl-4"><strong>II. TRIỂN KHAI CÔNG TÁC THÁNG:</strong></p>
+                <p class="pl-6">1. Những công tác khác (Chỉ ghi ngắn ngọn):</p>
+                <p class="pl-8">a) Công tác giáo dục đạo đức học sinh ; Sinh hoạt chủ điểm , trọng tâm tháng: {{ minutes.planAction }}</p>
+                <p class="pl-6">2. Chuyên môn (Ghi ngắn gọn và đầy đủ các nội dung):</p>
+                <p class="pl-8">a) Nhắc nhở và triển khai chuyên môn; Sinh hoạt chuyên đề chuyên môn:<br>{{ minutes.planProfessional }}</p>
+                <p class="font-bold">B/. THẢO LUẬN:</p>
+                <p class="pl-4">1. Diễn biến (Ghi ngắn gọn và đầy đủ ý kiến phát biểu thảo luận):</p>
+                <p class="pl-6">Góp ý kiến rút kinh nghiệm công tác tháng trước:<br>{{ minutes.discussionContent }}</p>
+                <p class="pl-6">Nhất trí hoặc không nhất trí nội dung công tác và phân công phụ trách:<br>{{ minutes.discussionAgreement }}</p>
+                <p class="pl-6">Điều chỉnh hoặc bổ sung thêm nội dung công tác :<br>{{ minutes.discussionChanges }}</p>
+                <p class="pl-4">2. Kết luận thống nhất của tổ trưởng chuyên môn :</p>
+                <p class="pl-6">a) Nhất trí các nội dung công tác :<br>{{ minutes.conclusionAgreed }}</p>
+                <p class="pl-6">b) Chưa thống nhất các nội dung công tác:<br>{{ minutes.conclusionDisagreed }}</p>
+                <p class="font-bold">C/. NHỮNG KIẾN NGHỊ VỚI BAN GIÁM HIỆU:</p>
+                <p class="pl-4">{{ minutes.boardSuggestions }}</p>
+                <p>Biên bản kết thúc vào lúc ........ giờ ........ cùng ngày. với sự thống nhất của tập thể thành viên trong tổ tham dự đồng ý ký tên .</p>
+              </section>
+              <footer class="grid grid-cols-3 mt-16 text-center">
+                <div><p class="font-bold">CHỦ TOẠ HỘI NGHỊ</p><p class="italic text-xs mb-2">Khối Trưởng</p>@if(minutes.headSignature){<img [src]="minutes.headSignature" alt="Chữ ký Chủ toạ" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+                <div><p class="font-bold">BGH DỰ CHỈ ĐẠO</p><p class="italic text-xs mb-2">(Ký tên, ghi chức vụ)</p>@if(minutes.directorSignature){<img [src]="minutes.directorSignature" alt="Chữ ký BGH" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+                <div><p class="font-bold">THƯ KÝ VIẾT BIÊN BẢN</p><p class="italic text-xs mb-2">(Ký và ghi rõ họ tên)</p>@if(minutes.secretarySignature){<img [src]="minutes.secretarySignature" alt="Chữ ký Thư ký" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+              </footer>
+            }
+            @case ('Khối 2, 3') {
+              <h1 class="text-center font-bold uppercase text-base mb-2">BIÊN BẢN SINH HOẠT CHUYÊN MÔN TỔ 2+3</h1>
+              <h2 class="text-center font-bold uppercase text-base mb-4">NĂM HỌC {{currentSession.schoolYear}}</h2>
+              <section class="space-y-2">
+                <p>Tiến hành vào hồi {{ formatTime(minutes.meetingTime) }} {{ formatDate(minutes.meetingDate) }}</p>
+                <p>Tại: {{ minutes.locationRoom }} trường {{ generalInfo?.school }}</p>
+                <p>Thành phần tham dự: Tất cả các GV trong tổ 2+3. Có mặt: {{ minutes.presentCount }}; Vắng: {{ minutes.absentCount }}</p>
+                <p>Chủ trì: Đ/c {{ minutes.chairperson }}</p>
+                <p>Thư ký: Đ/c {{ minutes.secretary }}</p>
+                <h2 class="font-bold text-center mt-4">NỘI DUNG</h2>
+                <p><strong>1. Đ/c {{ minutes.topicLead }} lên lớp chuyên đề {{ minutes.topicTitle }}</strong></p>
+                <p class="pl-4"><strong>Hoạt động 1: Phần mở đầu</strong></p>
+                <p class="pl-6">{{ minutes.activity1_Opening }}</p>
+                <p class="pl-4"><strong>Hoạt động 2: Hình thành kiến thức mới</strong></p>
+                <p class="pl-6">{{ minutes.activity2_NewKnowledge }}</p>
+                <p class="pl-4"><strong>Hoạt động 3: Luyện tập thực hành</strong></p>
+                <p class="pl-6">{{ minutes.activity3_Practice }}</p>
+                <p class="pl-4"><strong>Hoạt động 4: Vận dụng, sáng tạo</strong></p>
+                <p class="pl-6">{{ minutes.activity4_Application }}</p>
+                <p><strong>2. Thảo luận</strong></p>
+                <p class="pl-4">{{ minutes.discussionContent }}</p>
+                <p><strong>3. Tổ đưa ra thống nhất quy trình dạy {{ minutes.topicTitle }}</strong></p>
+                <p class="pl-4">{{ minutes.consensus }}</p>
+                <p><strong>Đ/c {{ minutes.secretary }} đánh giá hoạt động tháng {{ currentSession.month }}</strong></p>
+                <p class="pl-4">{{ minutes.evaluation }}</p>
+                <p><strong>4. Xếp loại tập thể, cá nhân</strong></p>
+                <p class="pl-4">{{ minutes.classification }}</p>
+                <p>Cuộc họp kết thúc vào {{ formatTime(minutes.conclusionTime) }} cùng ngày./.</p>
+              </section>
+              <footer class="grid grid-cols-2 mt-16 text-center">
+                <div><p class="font-bold">CHỦ TOẠ</p><p class="italic text-xs mb-2">(Ký và ghi rõ họ tên)</p>@if(minutes.chairpersonSignature){<img [src]="minutes.chairpersonSignature" alt="Chữ ký Chủ toạ" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+                <div><p class="font-bold">THƯ KÝ</p><p class="italic text-xs mb-2">(Ký và ghi rõ họ tên)</p>@if(minutes.secretarySignature){<img [src]="minutes.secretarySignature" alt="Chữ ký Thư ký" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+              </footer>
+            }
+            @case ('Khối 4, 5') {
+              <h1 class="text-center font-bold uppercase text-base mb-2">BIÊN BẢN HỌP TỔ KHỐI 4, 5 LẦN 1 THÁNG {{currentSession.month}}/...</h1>
+              <h2 class="text-center font-bold text-base mb-4">(Trích biên bản họp)</h2>
+              <section class="space-y-2">
+                <p>Thời gian: Lúc {{ formatTime(minutes.meetingTime) }}, {{ formatDate(minutes.meetingDate) }}</p>
+                <p>Địa điểm: {{ minutes.location }}</p>
+                <p class="font-bold mt-4">I. Thành phần tham dự:</p>
+                <p class="pl-4">1. Đại diện BGH: {{ minutes.bghRepresentative }} - Hiệu trưởng.</p>
+                <p class="pl-4">2. Chủ tọa: {{ minutes.chairperson }} chức vụ: Tổ trưởng</p>
+                <p class="pl-4">3. Thư ký: {{ minutes.secretary }}</p>
+                <p class="pl-4">4. Các thành viên trong tổ: có {{ minutes.totalMembers }} thành viên</p>
+                <p class="pl-6">- Có mặt: {{ minutes.presentMembers }} thành viên</p>
+                <p class="pl-6">- Vắng: {{ minutes.absentMembers }}</p>
+                <p class="font-bold mt-4">II. Nội dung:</p>
+                <p class="pl-4"><strong>1. Báo cáo tình hình thực hiện 2 tuần qua:</strong></p>
+                <p class="pl-6">* Ưu điểm;</p>
+                <p class="pl-8">- Công tác chính trị tư tưởng: {{ minutes.reportPolitical }}</p>
+                <p class="pl-8">- Công tác chuyên môn: {{ minutes.reportProfessional }}</p>
+                <p class="pl-4"><strong>2. Phương hướng hoạt động 2 tuần tới</strong></p>
+                <p class="pl-6">2.1. Công tác chính trị tư tưởng: {{ minutes.planPolitical }}</p>
+                <p class="pl-6">2.2. Triển khai các văn bản của cấp trên: {{ minutes.planDocuments }}</p>
+                <p class="pl-6">3. Học tập làm theo tấm gương đạo đức Hồ Chí Minh: {{ minutes.planHoChiMinh }}</p>
+                <p class="pl-6">4. Dân vận khéo: {{ minutes.planPublicRelations }}</p>
+                <p class="pl-6">5. Công tác chuyên môn: {{ minutes.planProfessional }}</p>
+                <p class="pl-6">6. Các ý kiến đóng góp: {{ minutes.contributions }}</p>
+                <p class="pl-6">7. Phát biểu của lãnh đạo tham dự: {{ minutes.leaderComments }}</p>
+                <p class="pl-6">8. Kết luận: {{ minutes.conclusion }}</p>
+                <p class="text-right italic mt-8">..., {{ formatDate(minutes.meetingDate) }}</p>
+              </section>
+              <footer class="grid grid-cols-2 mt-16 text-center">
+                <div><p class="font-bold">Tổ trưởng</p><p class="italic text-xs mb-2">(Ký, ghi rõ họ tên)</p>@if(minutes.headSignature){<img [src]="minutes.headSignature" alt="Chữ ký Tổ trưởng" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+                <div><p class="font-bold">Thư ký</p><p class="italic text-xs mb-2">(Ký, ghi rõ họ tên)</p>@if(minutes.secretarySignature){<img [src]="minutes.secretarySignature" alt="Chữ ký Thư ký" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+              </footer>
+            }
+          }
+        }
+      }
+      @case ('class-observation') {
+        @switch (currentSession.observationType) {
+          @case ('observation-evaluation-tt27') {
+            @if(currentSession.data.observationData; as minutes) {
+              <h1 class="text-center font-bold uppercase text-base mb-8">PHIẾU DỰ GIỜ ĐÁNH GIÁ TIẾT DẠY (Thông tư 27)</h1>
+              <section class="space-y-3">
+                <div class="grid grid-cols-3 gap-x-4"><p><strong>Họ và tên người dạy:</strong> {{ minutes.teacher }}</p><p colspan="2"><strong>Đơn vị:</strong> {{ generalInfo?.school }}</p></div>
+                <div class="grid grid-cols-4 gap-x-4"><p><strong>Môn:</strong> {{ minutes.subject }}</p><p><strong>Lớp:</strong> {{ minutes.class }}</p><p><strong>Tiết:</strong> {{ minutes.period }}</p><p><strong>Tiết PPCT:</strong> {{ minutes.ppct }}</p></div>
+                <div class="grid grid-cols-2 gap-x-4"><p><strong>Ngày:</strong> {{ formatDate(minutes.date) }}</p><p><strong>Buổi:</strong> {{ minutes.session }}</p></div>
+                <p><strong>Bài dạy:</strong> {{ minutes.lesson }}</p>
+                <p><strong>Họ và tên người dự:</strong> {{ minutes.observerName }}</p>
+                <div class="grid grid-cols-2 gap-x-4"><p><strong>Chức vụ:</strong> {{ minutes.observerPosition }}</p><p><strong>Đơn vị công tác:</strong> {{ minutes.observerDepartment }}</p></div>
+                <h2 class="font-bold mt-6">I. TIẾN TRÌNH HOẠT ĐỘNG DẠY VÀ HỌC</h2>
+                <table class="w-full border-collapse border border-gray-400">
+                  <thead><tr class="bg-gray-100 font-bold"><td class="border border-gray-400 p-2">Hoạt động của GV</td><td class="border border-gray-400 p-2">Hoạt động của HS</td><td class="border border-gray-400 p-2">Nhận xét và ghi chú của người dự giờ</td></tr></thead>
+                  <tbody>
+                    @for(row of minutes.teachingProcess; track row) {
+                      <tr><td class="border border-gray-400 p-2">{{ row.teacherActivity }}</td><td class="border border-gray-400 p-2">{{ row.studentActivity }}</td><td class="border border-gray-400 p-2">{{ row.observerNotes }}</td></tr>
+                    } @empty {
+                      @for(i of [1,2,3,4]; track i) {
+                        <tr><td class="border border-gray-400 p-2 h-10"></td><td class="border border-gray-400 p-2 h-10"></td><td class="border border-gray-400 p-2 h-10"></td></tr>
+                      }
+                    }
+                  </tbody>
+                </table>
+                <h2 class="font-bold mt-6">II. XẾP LOẠI TIẾT DẠY</h2>
+                <table class="w-full border-collapse border border-gray-400 text-sm">
+                  <thead class="bg-gray-100 font-bold"><tr class="bg-gray-100 font-bold"><td class="border border-gray-400 p-2">Nội dung</td><td class="border border-gray-400 p-2">Tiêu chí</td><td class="border border-gray-400 p-2 w-20">Điểm</td></tr></thead>
+                  <tbody>
+                    @for(item of ratingCriteria; track item.name) {
+                      <tr>
+                        <td class="border border-gray-400 p-2 font-medium">{{ item.content }}</td>
+                        <td class="border border-gray-400 p-2">{{ item.criteria }}</td>
+                        <td class="border border-gray-400 p-2 text-center">{{ minutes[item.name] ?? '' }}</td>
+                      </tr>
+                    }
+                    <tr class="font-bold bg-gray-50"><td colspan="2" class="border border-gray-400 p-2 text-right">Tổng số điểm:</td><td class="border border-gray-400 p-2 text-center">{{ calculateTotalScore(minutes) }}</td></tr>
+                  </tbody>
+                </table>
+                <h2 class="font-bold mt-6">III. ĐÁNH GIÁ CHUNG</h2>
+                <p><strong>1. Ưu điểm:</strong></p>
+                <p class="pl-4">{{ minutes.advantages }}</p>
+                <p><strong>2. Khuyết điểm:</strong></p>
+                <p class="pl-4">{{ minutes.disadvantages }}</p>
+              </section>
+              <footer class="grid grid-cols-3 mt-16 text-center">
+                <div><p class="font-bold">Giáo viên dạy</p><p class="italic text-xs mb-2">(chữ ký, họ tên)</p>@if(minutes.teacherSignature){<img [src]="minutes.teacherSignature" alt="Chữ ký" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+                <div><p class="font-bold">Hiệu trưởng/Tổ CM</p><p class="italic text-xs mb-2">(ký tên và đóng dấu)</p>@if(minutes.headSignature){<img [src]="minutes.headSignature" alt="Chữ ký" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+                <div><p class="font-bold">Người dự giờ</p><p class="italic text-xs mb-2">(chữ ký, họ tên)</p>@if(minutes.observerSignature){<img [src]="minutes.observerSignature" alt="Chữ ký" class="h-24 w-48 mx-auto object-contain">} @else { <div class="h-24 w-48 mx-auto"></div> }</div>
+              </footer>
+            }
+          }
+          @case ('evaluation-tt27') {
+            @if(currentSession.data.evaluationData; as minutes) {
+              <h1 class="text-center font-bold uppercase text-base mb-8">PHIẾU ĐÁNH GIÁ GIỜ DẠY</h1>
+              <section class="space-y-3">
+                <p><strong>Họ và tên sinh viên:</strong> {{ minutes.studentName }}</p>
+                <div class="grid grid-cols-4 gap-4"><p><strong>Ngày lên lớp:</strong> {{ formatDate(minutes.date) }}</p><p><strong>Buổi:</strong> {{ minutes.session }}</p><p><strong>Tiết:</strong> {{ minutes.period }}</p><p><strong>Lớp:</strong> {{ minutes.class }}</p></div>
+                <p><strong>Tên chủ đề/bài học:</strong> {{ minutes.lesson }}</p>
+                <p><strong>Họ và tên giáo viên cùng dự:</strong> {{ minutes.attendingTeacher }}</p>
+                <table class="w-full border-collapse border border-gray-400 text-sm mt-6">
+                  <thead class="bg-gray-100 font-bold"><tr><td class="border border-gray-400 p-2">Các lĩnh vực</td><td class="border border-gray-400 p-2">Tiêu chí</td><td class="border border-gray-400 p-2">Điểm tối đa</td><td class="border border-gray-400 p-2">Điểm đánh giá</td></tr></thead>
+                  <tbody>
+                    <tr class="bg-gray-50 font-bold"><td class="border border-gray-400 p-2">1. Xác định mục tiêu (3 điểm)</td><td colspan="3" class="border border-gray-400 p-2"></td></tr>
+                     @for(item of lessonEvaluationCriteria.slice(0, 2); track item.field) {
+                      <tr><td class="border border-gray-400 p-2"></td><td class="border border-gray-400 p-2">{{item.text}}</td><td class="border border-gray-400 p-2 text-center">{{item.max}}</td><td class="border border-gray-400 p-2 text-center">{{minutes[item.field]}}</td></tr>
+                    }
+                     <tr class="bg-gray-50 font-bold"><td class="border border-gray-400 p-2">2. Hoạt động của sinh viên (5 điểm)</td><td colspan="3" class="border border-gray-400 p-2"></td></tr>
+                     @for(item of lessonEvaluationCriteria.slice(2, 8); track item.field) {
+                      <tr><td class="border border-gray-400 p-2"></td><td class="border border-gray-400 p-2">{{item.text}}</td><td class="border border-gray-400 p-2 text-center">{{item.max}}</td><td class="border border-gray-400 p-2 text-center">{{minutes[item.field]}}</td></tr>
+                    }
+                     <tr class="bg-gray-50 font-bold"><td class="border border-gray-400 p-2">3. Hoạt động của học sinh (8 điểm)</td><td colspan="3" class="border border-gray-400 p-2"></td></tr>
+                     @for(item of lessonEvaluationCriteria.slice(8, 13); track item.field) {
+                      <tr><td class="border border-gray-400 p-2"></td><td class="border border-gray-400 p-2">{{item.text}}</td><td class="border border-gray-400 p-2 text-center">{{item.max}}</td><td class="border border-gray-400 p-2 text-center">{{minutes[item.field]}}</td></tr>
+                    }
+                     <tr class="bg-gray-50 font-bold"><td class="border border-gray-400 p-2">4. Hiệu quả (4 điểm)</td><td colspan="3" class="border border-gray-400 p-2"></td></tr>
+                     @for(item of lessonEvaluationCriteria.slice(13); track item.field) {
+                      <tr><td class="border border-gray-400 p-2"></td><td class="border border-gray-400 p-2">{{item.text}}</td><td class="border border-gray-400 p-2 text-center">{{item.max}}</td><td class="border border-gray-400 p-2 text-center">{{minutes[item.field]}}</td></tr>
+                    }
+                    <tr class="font-bold bg-gray-100"><td colspan="2" class="border border-gray-400 p-2 text-right">Cộng</td><td class="border border-gray-400 p-2 text-center">20</td><td class="border border-gray-400 p-2 text-center">{{calculateLessonEvaluationTotal(minutes)}}</td></tr>
+                  </tbody>
+                </table>
+                <div class="mt-8">
+                  <table class="w-full border-collapse border border-gray-400">
+                    <thead><tr class="bg-gray-100 font-bold"><td class="border border-gray-400 p-2">GHI CHÉP HOẠT ĐỘNG GIÁO DỤC CHỦ YẾU</td><td class="border border-gray-400 p-2">GHI CHÚ</td></tr></thead>
+                    <tbody>
+                      <tr><td class="border border-gray-400 p-2 h-32 align-top">{{minutes.mainActivities}}</td><td class="border border-gray-400 p-2 h-32 align-top">{{minutes.notes}}</td></tr>
+                      <tr><td colspan="2" class="border border-gray-400 p-2"><p><strong>Nhận xét chung:</strong></p><p class="h-24">{{minutes.generalComments}}</p></td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+              <footer class="mt-16 text-right">
+                <p class="italic mb-4">..., {{ formatDate(currentDate.toISOString()) }}</p>
+                <div><p class="font-bold">Người đánh giá</p>@if(minutes.evaluatorSignature){<img [src]="minutes.evaluatorSignature" alt="Chữ ký" class="h-24 w-48 ml-auto object-contain">} @else { <div class="h-24 w-48 ml-auto"></div> }</div>
+              </footer>
+            }
+          }
+        }
+      }
+    }
+  </div>
+} @else {
+  <div class="text-center p-8 text-gray-500">
+    <p>Chưa có dữ liệu để hiển thị biên bản.</p>
+  </div>
+}

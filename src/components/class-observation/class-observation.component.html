@@ -1,0 +1,87 @@
+<div class="bg-white rounded-2xl shadow-xl animate-fade-in">
+  <!-- Header -->
+  <div class="flex justify-between items-center pt-6 pb-4 px-6 sm:pt-8 sm:pb-4 sm:px-8 border-b">
+      <h2 class="text-xl font-semibold text-gray-800 tracking-wide">{{ session().title }}</h2>
+      <button (click)="goBack()" class="text-sm text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1"> 
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+        </svg>
+        Về trang chính
+      </button>
+  </div>
+  
+  <div class="p-6 sm:p-8">
+    @if (!session().observationType) {
+      <div class="text-center">
+        <h3 class="text-lg font-medium text-gray-900">Vui lòng chọn loại phiếu để tạo</h3>
+        <p class="mt-2 text-sm text-gray-500">Mỗi loại phiếu sẽ có một mẫu biểu khác nhau.</p>
+        <div class="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          
+          <!-- Active Form -->
+          <button (click)="selectObservationType('observation-evaluation-tt27')" class="p-6 text-center bg-teal-50 rounded-lg hover:bg-teal-100 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 transform hover:-translate-y-1 shadow hover:shadow-lg">
+            <div>
+              <span class="text-lg font-bold text-teal-700">Phiếu dự giờ đánh giá tiết dạy (Thông tư 27)</span>
+              <p class="text-sm text-teal-600 mt-2 text-justify">
+                Đây là phiếu dùng để quan sát và đánh giá tiết dạy của giáo viên đang làm việc. Người dự giờ (lãnh đạo, đồng nghiệp) ghi chép tiến trình, đánh giá các tiêu chí theo thang điểm 20 và xếp loại tổng thể (Giỏi, Khá,...). Phiếu có tính hành chính, dùng cho đánh giá hiệu suất hoặc thi đua.
+              </p>
+            </div>
+          </button>
+          
+          <!-- Now Active Form -->
+          <button (click)="selectObservationType('evaluation-tt27')" class="p-6 text-center bg-rose-50 rounded-lg hover:bg-rose-100 transition-colors focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2 transform hover:-translate-y-1 shadow hover:shadow-lg">
+            <div>
+              <span class="text-lg font-bold text-rose-700">Phiếu đánh giá giờ dạy (Thông tư 27)</span>
+              <p class="text-sm text-rose-600 mt-2 text-justify">
+                Phiếu dùng để đánh giá sinh viên thực tập sư phạm. Người dự giờ (GV hướng dẫn/đồng nghiệp) sẽ chấm điểm các tiêu chí về mục tiêu, hoạt động dạy-học, và hiệu quả tiết dạy theo thang điểm 20. Kết quả dùng để xếp loại và góp ý giúp sinh viên cải thiện kỹ năng sư phạm.
+              </p>
+            </div>
+          </button>
+          
+          <!-- Disabled Forms -->
+          <button class="flex flex-col items-center justify-center p-6 text-center bg-gray-100 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed" disabled>
+            <span class="text-lg font-bold text-gray-500">Phiếu dự giờ tiết dạy có ứng dụng CNTT</span>
+            <span class="text-xs text-gray-500 mt-1">(Đang phát triển)</span>
+          </button>
+           <button class="flex flex-col items-center justify-center p-6 text-center bg-gray-100 rounded-lg disabled:opacity-60 disabled:cursor-not-allowed" disabled>
+            <span class="text-lg font-bold text-gray-500">Phiếu đánh giá tiết dạy theo mô hình VNEN</span>
+            <span class="text-xs text-gray-500 mt-1">(Đang phát triển)</span>
+          </button>
+
+        </div>
+      </div>
+    } @else {
+      @switch (session().observationType) {
+        @case ('observation-evaluation-tt27') {
+          <app-evaluation-form
+            [initialData]="session().data.observationData"
+            (formSubmitted)="onFormSubmitted($event)"
+            (viewClicked)="onViewClicked()"
+            (downloadClicked)="onDownloadClicked()">
+          </app-evaluation-form>
+        }
+        @case ('evaluation-tt27') {
+          <app-lesson-evaluation-form
+            [initialData]="session().data.evaluationData"
+            (formSubmitted)="onFormSubmitted($event)"
+            (viewClicked)="onViewClicked()"
+            (downloadClicked)="onDownloadClicked()">
+          </app-lesson-evaluation-form>
+        }
+        @default {
+          <div class="text-center p-12 bg-gray-50 rounded-lg">
+            <h3 class="text-lg font-medium text-gray-900">
+                Chức năng đang được phát triển
+            </h3>
+            <p class="mt-2 text-sm text-gray-600">
+                Chức năng tạo phiếu chi tiết cho mục này đang được xây dựng. <br>
+                Vui lòng quay lại sau hoặc liên hệ quản trị viên.
+            </p>
+            <button (click)="goBackToTypeSelection()" class="mt-6 rounded-md bg-white px-3.5 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                Chọn lại loại phiếu
+            </button>
+          </div>
+        }
+      }
+    }
+  </div>
+</div>
